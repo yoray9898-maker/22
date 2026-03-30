@@ -1,76 +1,87 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <title>test</title>
-  <link rel="stylesheet" href="./style.css">
+    <meta charset="UTF-8">
+    <title>yoray的卡通簡易計算機</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    
+    <h1>yoray的卡通計算機</h1>
 
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>yoray的簡易計算機</title>
-    <style>
-        input[type="button"] {
-            width: 50px;
-            height: 50px;
-        }
-        input[type="text"] {
-            width: 200px;
-            height: 50px;
-        }
-    </style>
-</head>
-<body>
-    <h1>yoray的簡易計算機</h1>
-  <hr>
-   <hr>
-     <hr>
-    <input type="text" id="display" readonly>
-    <br>
-    <input type="button" value="1" onclick="appendToDisplay('1')">
-    <input type="button" value="2" onclick="appendToDisplay('2')">
-    <input type="button" value="3" onclick="appendToDisplay('3')">
-    <input type="button" value="+" onclick="appendToDisplay('+')">
-    <br>
-    <input type="button" value="4" onclick="appendToDisplay('4')">
-    <input type="button" value="5" onclick="appendToDisplay('5')">
-    <input type="button" value="6" onclick="appendToDisplay('6')">
-    <input type="button" value="-" onclick="appendToDisplay('-')">
-    <br>
-    <input type="button" value="7" onclick="appendToDisplay('7')">
-    <input type="button" value="8" onclick="appendToDisplay('8')">
-    <input type="button" value="9" onclick="appendToDisplay('9')">
-    <input type="button" value="*" onclick="appendToDisplay('*')">
-    <br>
-    <input type="button" value="0" onclick="appendToDisplay('0')">
-    <input type="button" value="C" onclick="clearDisplay()">
-    <input type="button" value="=" onclick="calculate()">
-    <input type="button" value="/" onclick="appendToDisplay('/')">
-    <br>
+    <div class="calculator-case">
+        <input type="text" id="display" readonly placeholder="0">
+
+        <div class="button-grid">
+            <input type="button" value="1" class="btn-num" onclick="appendToDisplay('1')">
+            <input type="button" value="2" class="btn-num" onclick="appendToDisplay('2')">
+            <input type="button" value="3" class="btn-num" onclick="appendToDisplay('3')">
+            <input type="button" value="+" class="btn-op" onclick="appendToDisplay('+')">
+
+            <input type="button" value="4" class="btn-num" onclick="appendToDisplay('4')">
+            <input type="button" value="5" class="btn-num" onclick="appendToDisplay('5')">
+            <input type="button" value="6" class="btn-num" onclick="appendToDisplay('6')">
+            <input type="button" value="-" class="btn-op" onclick="appendToDisplay('-')">
+
+            <input type="button" value="7" class="btn-num" onclick="appendToDisplay('7')">
+            <input type="button" value="8" class="btn-num" onclick="appendToDisplay('8')">
+            <input type="button" value="9" class="btn-num" onclick="appendToDisplay('9')">
+            <input type="button" value="*" class="btn-op" onclick="appendToDisplay('*')">
+
+            <input type="button" value="0" class="btn-num" onclick="appendToDisplay('0')">
+            <input type="button" value="." class="btn-op" onclick="appendToDisplay('.')">
+            <input type="button" value="=" class="btn-equal" onclick="calculate()">
+            <input type="button" value="/" class="btn-op" onclick="appendToDisplay('/')">
+
+            <input type="button" value="C" class="btn-clear" onclick="clearDisplay()" style="grid-column: span 2; width: auto;">
+            <input type="button" value="<" class="btn-back" onclick="backspace()" style="grid-column: span 2; width: auto;" title="倒退鍵">
+        </div>
+    </div>
+
     <script>
+        // 1. 將數字或運算符加入螢幕
         function appendToDisplay(value) {
-            document.getElementById("display").value += value;
+            const display = document.getElementById("display");
+            // 防止螢幕上顯示 "Error" 時還能繼續輸入
+            if (display.value === 'Error') {
+                display.value = '';
+            }
+            display.value += value;
         }
 
+        // 2. 清除所有內容
         function clearDisplay() {
             document.getElementById("display").value = '';
         }
 
+        // 3. 倒退鍵 (刪除最後一個字元)
+        function backspace() {
+            const display = document.getElementById("display");
+            display.value = display.value.toString().slice(0, -1);
+        }
+
+        // 4. 計算結果
         function calculate() {
             var expression = document.getElementById("display").value;
+            // 如果螢幕是空的，就不執行計算
+            if (expression === '') return;
+
             try {
-                document.getElementById("display").value = eval(expression);
+                // 使用 eval 進行計算，並將結果放回螢幕
+                // 為了安全起見，理想上應該用更安全的方式解析字串，但在這個簡易練習中是可以接受的
+                let result = eval(expression);
+                
+                // 處理無限大 (例如除以 0)
+                if (!isFinite(result)) {
+                    document.getElementById("display").value = 'Error';
+                } else {
+                    document.getElementById("display").value = result;
+                }
             } catch (e) {
+                // 如果公式錯誤 (例如打錯符號)，顯示 Error
                 document.getElementById("display").value = 'Error';
             }
         }
     </script>
-</body>
-</html>
-<!-- partial -->
-  
 </body>
 </html>
